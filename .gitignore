@@ -1,0 +1,12 @@
+Library
+Temp
+*.csproj
+*.sln
+.vs
+*.apk
+*.unitypackage
+*.suo
+*.tmp
+*.user
+*.userprefs
+proj.ios
