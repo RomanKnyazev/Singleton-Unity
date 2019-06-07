@@ -2,15 +2,48 @@
 
 namespace Assets
 {
-    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    /// <summary>
+    /// Singleton pattern.
+    /// </summary>
+    public class Singleton<T> : MonoBehaviour where T : Component
     {
-        public static T Instance { get; private set; }
+        protected static T _instance;
 
-        public Singleton()
+        /// <summary>
+        /// Singleton design pattern
+        /// </summary>
+        /// <value>The instance.</value>
+        public static T Instance
         {
-            if (Instance != null)
-                Debug.Log("Singleton " + typeof(T) + " already exists -- overwriting");
-            Instance = this as T;
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindObjectOfType<T>();
+                    if (_instance == null)
+                    {
+                        GameObject obj = new GameObject();
+                        _instance = obj.AddComponent<T>();
+                    }
+                }
+                return _instance;
+            }
+        }
+
+        /// <summary>
+        /// On awake, we initialize our instance. Make sure to call base.Awake() in override if you need awake.
+        /// </summary>
+        protected virtual void Awake()
+        {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            if (_instance != null) Destroy(gameObject);
+            else DontDestroyOnLoad(this);
+
+            _instance = this as T;
         }
     }
 }
